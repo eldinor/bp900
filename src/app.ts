@@ -1,5 +1,3 @@
-//import "@babylonjs/core/Debug/debugLayer";
-//import "@babylonjs/inspector";
 import { Engine } from "@babylonjs/core/Engines/engine";
 import { Scene } from "@babylonjs/core/scene";
 import { AxesViewer } from "@babylonjs/core/Debug/axesViewer";
@@ -8,6 +6,7 @@ import { WebGPUEngine } from "@babylonjs/core/Engines/webgpuEngine";
 import { HavokPlugin } from "@babylonjs/core/Physics/v2/Plugins/havokPlugin";
 import HavokPhysics from "@babylonjs/havok";
 
+import { templateConfig } from "./config/template-config";
 import MainScene from "./playground/main-scene";
 
 class App {
@@ -24,46 +23,44 @@ class App {
     this.canvas.id = "renderCanvas";
     document.body.appendChild(this.canvas);
 
-    //  this.init(); // Uncomment to use WebGL2 engine
-    this.initWebGPU(); // Comment not to use WebGPU engine
+    void this.bootstrap();
   }
 
-  async init(): Promise<void> {
-    this.engine = new Engine(this.canvas, true, {
-      powerPreference: "high-performance",
-      preserveDrawingBuffer: true,
-      stencil: true,
-      disableWebGL2Support: false,
+  async bootstrap(): Promise<void> {
+    this.engine = await this._createEngine();
+    this.scene = new Scene(this.engine);
+
+    if (templateConfig.features.physics) {
+      await this._setPhysics();
+    }
+
+    new MainScene(this.scene, this.canvas);
+
+    this._config();
+    this._renderer();
+  }
+
+  async _createEngine(): Promise<Engine | WebGPUEngine> {
+    if (templateConfig.rendering.webgpuFirst && "gpu" in navigator) {
+      try {
+        const webgpu = new WebGPUEngine(this.canvas, {
+          adaptToDeviceRatio: templateConfig.rendering.engine.adaptToDeviceRatio,
+          antialias: templateConfig.rendering.engine.antialias,
+        });
+        await webgpu.initAsync();
+        return webgpu;
+      } catch (error) {
+        console.warn("WebGPU initialization failed, falling back to WebGL2.", error);
+      }
+    }
+
+    return new Engine(this.canvas, true, {
+      powerPreference: templateConfig.rendering.engine.powerPreference,
+      preserveDrawingBuffer: templateConfig.rendering.engine.preserveDrawingBuffer,
+      stencil: templateConfig.rendering.engine.stencil,
+      disableWebGL2Support: templateConfig.rendering.engine.disableWebGL2Support,
+      adaptToDeviceRatio: templateConfig.rendering.engine.adaptToDeviceRatio,
     });
-
-    this.scene = new Scene(this.engine);
-
-    // Add physics. If not needed, you can annotate it to improve loading speed and environment performance.
-    await this._setPhysics();
-
-    new MainScene(this.scene, this.canvas, this.engine);
-
-    this._config();
-    this._renderer();
-  }
-
-  async initWebGPU(): Promise<void> {
-    const webgpu = (this.engine = new WebGPUEngine(this.canvas, {
-      adaptToDeviceRatio: true,
-      antialias: true,
-    }));
-    await webgpu.initAsync();
-    this.engine = webgpu;
-    console.log(this.engine);
-
-    this.scene = new Scene(this.engine);
-    // Add physics. If not needed, you can annotate it to improve loading speed and environment performance.
-    await this._setPhysics();
-
-    new MainScene(this.scene, this.canvas, this.engine);
-
-    this._config();
-    this._renderer();
   }
 
   async _setPhysics(): Promise<void> {
@@ -74,6 +71,10 @@ class App {
   }
 
   _fps(): void {
+    if (!templateConfig.debug.showFps) {
+      return;
+    }
+
     const dom = document.getElementById("display-fps");
     if (dom) {
       dom.innerHTML = `${this.engine.getFps().toFixed()} fps`;
@@ -89,12 +90,12 @@ class App {
     // Imports and hide/show the Inspector
     // Works only in DEV mode to reduce the size of the PRODUCTION build
     // Comment IF statement to work in both modes
-    if (import.meta.env.DEV) {
+    if (templateConfig.debug.inspectorInDevOnly && import.meta.env.DEV) {
       await Promise.all([import("@babylonjs/core/Debug/debugLayer"), import("@babylonjs/inspector")]);
 
       window.addEventListener("keydown", (ev) => {
         // Shift+Ctrl+Alt+I
-        if (ev.shiftKey && ev.ctrlKey && ev.altKey && ev.keyCode === 73) {
+        if (ev.shiftKey && ev.ctrlKey && ev.altKey && ev.key.toLowerCase() === "i") {
           if (this.scene.debugLayer.isVisible()) {
             this.scene.debugLayer.hide();
           } else {
@@ -109,21 +110,20 @@ class App {
       this.engine.resize();
     });
 
-    window.onbeforeunload = () => {
-      // I have tested it myself and the system will automatically remove this junk.
-      this.scene.onBeforeRenderObservable.clear();
-      this.scene.onAfterRenderObservable.clear();
-      this.scene.onKeyboardObservable.clear();
-    };
+    window.addEventListener("beforeunload", () => {
+      this.scene.dispose();
+      this.engine.dispose();
+    });
   }
 
   // Auxiliary Class Configuration
   _config(): void {
-    // Axes
-    new AxesViewer();
+    if (templateConfig.features.axesViewer) {
+      new AxesViewer(this.scene, 2);
+    }
 
     // Inspector and other stuff
-    this._bindEvent();
+    void this._bindEvent();
   }
 
   _renderer(): void {

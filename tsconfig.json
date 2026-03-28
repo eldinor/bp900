@@ -7,10 +7,9 @@
         ],
         "strict": true,
         "noEmit": true,
-        "baseUrl": "./",
         "useDefineForClassFields": true, // enable latest ECMA runtime behavior with older ECMA/JavaScript versions (delete this line if target: "ESNext" or "ES2022"+)
         "module": "ESNext", // use the latest ECMA/JavaScript syntax for our import statements and such
-        "moduleResolution": "node", // ensures we are using CommonJS for our npm packages
+        "moduleResolution": "bundler", // Vite-friendly module resolution for modern ESM projects
         "noResolve": false, // disable TypeScript from automatically detecting/adding files based on import statements and etc (it's less helpful than you think)
         "isolatedModules": true, // allows our code to be processed by other transpilers, such as preventing non-module TS files (you could delete this since we're only using base TypeScript)
         "removeComments": true, // remove comments from our outputted code to save on space (look into terser if you want to protect the outputted JS even more)
@@ -22,7 +21,7 @@
         "skipLibCheck": true, // skip type-checking of .d.ts files (it speeds up transpiling)
         "strictPropertyInitialization": false,
         "paths": {
-            "@/*": ["src/*"]
+            "@/*": ["./src/*"]
         }
     },
     "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "tests/**/*.ts", "tests/**/*.tsx", "src/**/*.d.ts", "**/*.ts", "**/*.glsl", "**/*.vue"],

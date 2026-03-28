@@ -1,14 +1,6 @@
-import { Scene } from "@babylonjs/core/scene";
 import { AdvancedDynamicTexture, Button, StackPanel, TextBlock } from "@babylonjs/gui/2D";
 
-export const setUI = async (scene: Scene) => {
-  if (scene.getEngine().name === "WebGPU") {
-    // WebGPU specific imports
-    await import("@babylonjs/core/Engines/WebGPU/Extensions/engine.dynamicTexture");
-    await import("@babylonjs/core/Engines/WebGPU/Extensions/engine.renderTarget");
-    console.log("WebGPU GUI extensions loaded");
-  }
-
+export const setUI = (): void => {
   const advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI("myUI");
 
   const panel = new StackPanel();
