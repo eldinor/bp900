@@ -1,17 +1,22 @@
 import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
 import { DefaultRenderingPipeline } from "@babylonjs/core/PostProcesses/RenderPipeline/Pipelines/defaultRenderingPipeline";
 import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight";
+import type { AbstractMesh } from "@babylonjs/core/Meshes/abstractMesh";
 import { Scene } from "@babylonjs/core/scene";
 import { Tools } from "@babylonjs/core/Misc/tools";
-import { Vector3 } from "@babylonjs/core/Maths/math.vector";
+import { Quaternion, Vector3 } from "@babylonjs/core/Maths/math.vector";
 import "@babylonjs/core/Helpers/sceneHelpers";
 import { templateConfig } from "../config/template-config";
 import { sceneAssets } from "./assets";
+import { getSceneRuntimeState } from "./scene-runtime";
 
 export default class MainScene {
   private camera: ArcRotateCamera;
 
-  constructor(private scene: Scene, private canvas: HTMLCanvasElement) {
+  constructor(
+    private scene: Scene,
+    private canvas: HTMLCanvasElement,
+  ) {
     this._setCamera(scene);
     this._setLight(scene);
     this._setEnvironment(scene);
@@ -43,14 +48,31 @@ export default class MainScene {
   }
 
   async loadComponents(): Promise<void> {
-    const [{ Ground }, { setUI }] = await Promise.all([import("./ground"), import("./gui")]);
+    const [{ Ground }, guiModule, modelModule] = await Promise.all([
+      import("./ground"),
+      templateConfig.features.gui ? import("./gui") : Promise.resolve(null),
+      templateConfig.features.demoModel ? import("./model-loader") : Promise.resolve(null),
+    ]);
 
-    this.scene.metadata = { assets: sceneAssets };
+    this.scene.metadata = {
+      ...(this.scene.metadata ?? {}),
+      assets: sceneAssets,
+    };
 
     new Ground(this.scene);
 
-    if (templateConfig.features.gui) {
-      setUI();
+    if (guiModule) {
+      await guiModule.setUI(this.scene);
+    }
+
+    if (modelModule) {
+      const rootMesh = await modelModule.loadDemoModel(this.scene, sceneAssets.model.xbot);
+      if (rootMesh) {
+        rootMesh.position = new Vector3(0, 0, 4);
+        rootMesh.rotationQuaternion = null; // then you may use usual rotation
+        rootMesh.scaling = new Vector3(1.25, 1.25, 1.25);
+        getSceneRuntimeState(this.scene).demoModelRootMesh = rootMesh;
+      }
     }
   }
 }

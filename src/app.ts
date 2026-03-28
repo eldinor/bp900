@@ -4,10 +4,10 @@ import { AxesViewer } from "@babylonjs/core/Debug/axesViewer";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { WebGPUEngine } from "@babylonjs/core/Engines/webgpuEngine";
 import { HavokPlugin } from "@babylonjs/core/Physics/v2/Plugins/havokPlugin";
-import HavokPhysics from "@babylonjs/havok";
 
 import { templateConfig } from "./config/template-config";
 import MainScene from "./playground/main-scene";
+import { getSceneRuntimeState } from "./playground/scene-runtime";
 
 class App {
   public engine: Engine | WebGPUEngine;
@@ -65,6 +65,7 @@ class App {
 
   async _setPhysics(): Promise<void> {
     const gravity = new Vector3(0, -9.81, 0);
+    const { default: HavokPhysics } = await import("@babylonjs/havok");
     const hk = await HavokPhysics();
     const plugin = new HavokPlugin(true, hk);
     this.scene.enablePhysics(gravity, plugin);
@@ -119,7 +120,8 @@ class App {
   // Auxiliary Class Configuration
   _config(): void {
     if (templateConfig.features.axesViewer) {
-      new AxesViewer(this.scene, 2);
+      const axesViewer = new AxesViewer(this.scene, 2);
+      getSceneRuntimeState(this.scene).axesViewer = axesViewer;
     }
 
     // Inspector and other stuff

@@ -1,9 +1,16 @@
 export const templateConfig = {
   features: {
     physics: true,
+    demoModel: true,
     axesViewer: import.meta.env.DEV,
     pipeline: true,
     gui: true,
+  },
+  demoModel: {
+    animation: {
+      enabled: true,
+      groupIndex: 1, // 'agree'
+    },
   },
   rendering: {
     webgpuFirst: true,
