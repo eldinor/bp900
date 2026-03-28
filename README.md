@@ -10,7 +10,11 @@ A compact Babylon.js starter with WebGPU-first rendering, automatic WebGL2 fallb
 
 `npm run dev:react`
 
+`npm run dev:svelte`
+
 `npm run dev:vanilla`
+
+`npm run dev:vue`
 
 `npm run typecheck`
 
@@ -18,13 +22,21 @@ A compact Babylon.js starter with WebGPU-first rendering, automatic WebGL2 fallb
 
 `npm run build:react`
 
+`npm run build:svelte`
+
 `npm run build:vanilla`
+
+`npm run build:vue`
 
 `npm run preview`
 
 `npm run preview:react`
 
+`npm run preview:svelte`
+
 `npm run preview:vanilla`
+
+`npm run preview:vue`
 
 ## Documentation
 
@@ -60,13 +72,15 @@ A compact Babylon.js starter with WebGPU-first rendering, automatic WebGL2 fallb
 
 ## Multiple templates
 
-The repo now contains two fully separate templates:
+The repo now contains fully separate templates:
 
 - root app: the existing `bp800` template
 - [`templates/vanilla`](./templates/vanilla): a self-contained minimal Babylon template copied in as its own folder
 - [`templates/react`](./templates/react): a self-contained React + Babylon template with the same demo scene recreated locally
+- [`templates/svelte`](./templates/svelte): a self-contained Svelte + Babylon template with the same demo scene recreated locally
+- [`templates/vue`](./templates/vue): a self-contained Vue + Babylon template with the same demo scene recreated locally
 
-The `vanilla` and `react` templates do not share engine, scene, or config code with the root template. Each one has its own `index.html`, `vite.config.ts`, and `src/` files.
+None of these templates share engine, scene, or config code with the root template. Each one owns its own entry files and Babylon setup.
 
 ## Feature switches
 

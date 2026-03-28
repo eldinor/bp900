@@ -20,6 +20,14 @@ Run the React template:
 
 `npm run dev:react`
 
+Run the Vue template:
+
+`npm run dev:vue`
+
+Run the Svelte template:
+
+`npm run dev:svelte`
+
 Create a production build:
 
 `npm run build`
@@ -31,6 +39,14 @@ Create the vanilla production build:
 Create the React production build:
 
 `npm run build:react`
+
+Create the Vue production build:
+
+`npm run build:vue`
+
+Create the Svelte production build:
+
+`npm run build:svelte`
 
 Check TypeScript only:
 
@@ -47,6 +63,14 @@ Preview the vanilla production build:
 Preview the React production build:
 
 `npm run preview:react`
+
+Preview the Vue production build:
+
+`npm run preview:vue`
+
+Preview the Svelte production build:
+
+`npm run preview:svelte`
 
 ## 2. Understand the main files
 
@@ -191,7 +215,7 @@ Disable `gui` when:
 
 ## 11. Separate template folders
 
-If you want another isolated template, follow the same pattern as [`templates/vanilla`](./templates/vanilla):
+If you want another isolated template, follow the same pattern as the folders in [`templates/`](./templates):
 
 - add a folder under `templates/`
 - give it its own `index.html`

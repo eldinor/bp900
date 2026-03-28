@@ -10,20 +10,29 @@
   "scripts": {
     "dev": "vite",
     "dev:react": "node scripts/run-template.mjs dev react",
+    "dev:svelte": "node scripts/run-template.mjs dev svelte",
     "dev:vanilla": "node scripts/run-template.mjs dev vanilla",
+    "dev:vue": "node scripts/run-template.mjs dev vue",
     "typecheck": "tsc --noEmit",
     "build": "npm run typecheck && vite build",
     "build:react": "npm run typecheck && node scripts/run-template.mjs build react",
+    "build:svelte": "node scripts/run-template.mjs build svelte",
     "build:vanilla": "npm run typecheck && node scripts/run-template.mjs build vanilla",
+    "build:vue": "node scripts/run-template.mjs build vue",
     "preview": "vite preview",
     "preview:react": "node scripts/run-template.mjs preview react",
-    "preview:vanilla": "node scripts/run-template.mjs preview vanilla"
+    "preview:svelte": "node scripts/run-template.mjs preview svelte",
+    "preview:vanilla": "node scripts/run-template.mjs preview vanilla",
+    "preview:vue": "node scripts/run-template.mjs preview vue"
   },
   "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^7.0.0",
+    "@types/node": "^25.5.0",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "@vitejs/plugin-react": "^5.0.4",
-    "@types/node": "^25.5.0",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "svelte": "^5.55.0",
     "typescript": "^6.0.2",
     "vite": "^8.0.3",
     "vite-plugin-compression": "^0.5.1",
@@ -37,6 +46,7 @@
     "@babylonjs/inspector": "^9.0.0",
     "@babylonjs/loaders": "^9.0.0",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react-dom": "^19.2.0",
+    "vue": "^3.5.22"
   }
 }

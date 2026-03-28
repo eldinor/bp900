@@ -6,7 +6,6 @@ import { fileURLToPath } from "node:url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const repoRoot = resolve(__dirname, "..");
-const viteBin = resolve(repoRoot, "node_modules", "vite", "bin", "vite.js");
 
 const [, , command = "dev", templateName = "default"] = process.argv;
 const templateRoot =
@@ -17,7 +16,11 @@ if (!existsSync(templateRoot)) {
   process.exit(1);
 }
 
-const child = spawn(process.execPath, [viteBin, command], {
+const localViteBin = resolve(templateRoot, "node_modules", "vite", "bin", "vite.js");
+const rootViteBin = resolve(repoRoot, "node_modules", "vite", "bin", "vite.js");
+const binPath = existsSync(localViteBin) ? localViteBin : rootViteBin;
+
+const child = spawn(process.execPath, [binPath, command], {
   cwd: templateRoot,
   stdio: "inherit",
   env: process.env,
