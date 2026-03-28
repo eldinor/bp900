@@ -1,11 +1,35 @@
 {
   "name": "vite-babylon-800",
-  "author": "Andrei Stepanov <eldinor@gmail.com> (https://babylonpress.org/)",
+  "description": "Babylon.js 9 starter templates for Vite 8, TypeScript, React, Vue, and Svelte.",
+  "author": {
+    "name": "Andrei Stepanov",
+    "email": "eldinor@gmail.com",
+    "url": "https://babylonpress.org/"
+  },
   "contributors": [
     "minibao (https://github.com/minibao/babylon-vite)"
   ],
   "private": true,
-  "version": "0.0.1",
+  "version": "0.1.0",
+  "license": "MIT",
+  "homepage": "https://babylonpress.org/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eldinor/bp900.git"
+  },
+  "bugs": {
+    "url": "https://github.com/eldinor/bp900/issues"
+  },
+  "keywords": [
+    "babylonjs",
+    "vite",
+    "typescript",
+    "react",
+    "vue",
+    "svelte",
+    "template",
+    "starter"
+  ],
   "type": "module",
   "scripts": {
     "dev": "vite",

@@ -12,6 +12,30 @@ This template has been updated to be easier to explore and easier to build on.
 - The GLB example now uses quaternion rotation, which matches how imported glTF/GLB models commonly behave in Babylon.js.
 - The GUI demo now includes quick buttons to dispose the axes helper and the loaded xBot model.
 
+## New template collection
+
+This project is no longer only one Babylon starter.
+
+It now also includes separate template folders for:
+
+- `vanilla`
+- `react`
+- `vue`
+- `svelte`
+
+That means you can choose the kind of app you want to start with instead of adapting everything from one root setup.
+
+Each template is self-contained, so the framework versions do not depend on shared scene or engine files from the main template.
+
+You can run them directly with:
+
+- `npm run dev:vanilla`
+- `npm run dev:react`
+- `npm run dev:vue`
+- `npm run dev:svelte`
+
+This makes the repo more useful as a starter collection, not only as a single demo project.
+
 ## Why this matters
 
 If you are new to Babylon.js, this gives you working examples of:

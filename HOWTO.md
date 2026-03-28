@@ -1,101 +1,76 @@
 # HOWTO
 
-This file explains practical ways to use this template.
+This file explains how to work with `bp900` and its template folders.
 
-## 1. Start the project
+## 1. Install and run
 
-Install dependencies:
+Install dependencies once in the repo root:
 
 `npm install`
 
-Run the dev server:
+Run the main template:
 
-`npm run dev`
+- `npm run dev`
+- `npm run build`
+- `npm run preview`
 
-Run the vanilla template:
+Run the other templates:
 
-`npm run dev:vanilla`
+- `npm run dev:vanilla`
+- `npm run dev:react`
+- `npm run dev:vue`
+- `npm run dev:svelte`
 
-Run the React template:
+Build the other templates:
 
-`npm run dev:react`
+- `npm run build:vanilla`
+- `npm run build:react`
+- `npm run build:vue`
+- `npm run build:svelte`
 
-Run the Vue template:
+Preview the other templates:
 
-`npm run dev:vue`
+- `npm run preview:vanilla`
+- `npm run preview:react`
+- `npm run preview:vue`
+- `npm run preview:svelte`
 
-Run the Svelte template:
-
-`npm run dev:svelte`
-
-Create a production build:
-
-`npm run build`
-
-Create the vanilla production build:
-
-`npm run build:vanilla`
-
-Create the React production build:
-
-`npm run build:react`
-
-Create the Vue production build:
-
-`npm run build:vue`
-
-Create the Svelte production build:
-
-`npm run build:svelte`
-
-Check TypeScript only:
+Type-check the repo:
 
 `npm run typecheck`
 
-Preview the production build:
+## 2. Choose your base app
 
-`npm run preview`
+If you want to start a project from one of the framework templates, pick one folder and treat it as your app base:
 
-Preview the vanilla production build:
+- [`templates/vanilla`](./templates/vanilla)
+- [`templates/react`](./templates/react)
+- [`templates/vue`](./templates/vue)
+- [`templates/svelte`](./templates/svelte)
 
-`npm run preview:vanilla`
+Example workflow for React:
 
-Preview the React production build:
+1. Start with `npm run dev:react`
+2. Edit files in [`templates/react`](./templates/react)
+3. Build with `npm run build:react`
 
-`npm run preview:react`
+The same pattern applies to `vue`, `svelte`, and `vanilla`.
 
-Preview the Vue production build:
+## 3. Understand the main template
 
-`npm run preview:vue`
+The root app lives in `src/` and is the full `bp900` Babylon template.
 
-Preview the Svelte production build:
+Important files:
 
-`npm run preview:svelte`
+- [`src/app.ts`](./src/app.ts): engine bootstrap and render loop
+- [`src/config/template-config.ts`](./src/config/template-config.ts): main feature switches
+- [`src/playground/main-scene.ts`](./src/playground/main-scene.ts): camera, light, environment, and scene loading
+- [`src/playground/assets.ts`](./src/playground/assets.ts): public asset paths
+- [`src/playground/model-loader.ts`](./src/playground/model-loader.ts): demo GLB loading
+- [`src/playground/gui.ts`](./src/playground/gui.ts): GUI sample
+- [`src/playground/ground.ts`](./src/playground/ground.ts): simple scene content
 
-## 2. Understand the main files
-
-- [`src/app.ts`](./src/app.ts)
-  Starts the engine, creates the Babylon scene, enables physics, and starts rendering.
-
-- [`src/playground/main-scene.ts`](./src/playground/main-scene.ts)
-  Sets up the camera, lighting, environment, post-processing pipeline, and demo content.
-
-- [`src/config/template-config.ts`](./src/config/template-config.ts)
-  Central place for turning features on and off.
-
-- [`src/playground/assets.ts`](./src/playground/assets.ts)
-  Central place for public asset paths.
-
-- [`src/playground/model-loader.ts`](./src/playground/model-loader.ts)
-  Example of loading a GLB model.
-
-- [`src/playground/gui.ts`](./src/playground/gui.ts)
-  Example of Babylon GUI.
-
-- [`src/playground/ground.ts`](./src/playground/ground.ts)
-  Example of simple meshes and physics bodies.
-
-## 3. Turn features on and off
+## 4. Turn root-template features on and off
 
 Open [`src/config/template-config.ts`](./src/config/template-config.ts).
 
@@ -109,117 +84,72 @@ You can control:
 - `showFps`
 - `webgpuFirst`
 
-Examples:
+Useful examples:
 
-- Turn off physics if you want a lighter scene.
-- Turn off `demoModel` if you only want primitive objects.
-- Turn off GUI if you do not need the overlay.
-- Turn off `webgpuFirst` if you want to stay on WebGL2 while testing.
+- disable `physics` for a lighter setup
+- disable `demoModel` if you want primitives only
+- disable `gui` if you want a cleaner baseline
+- disable `webgpuFirst` if you want to stay on WebGL2 during testing
 
-## 4. Replace the demo model
+## 5. Replace the demo model
 
-Put your own `.glb` file into `public/model/`.
+Put your `.glb` file into `public/model/`.
 
-Then update [`src/playground/assets.ts`](./src/playground/assets.ts) so the asset manifest points to your file.
+Then update [`src/playground/assets.ts`](./src/playground/assets.ts) so the asset manifest points to the new file.
 
-If needed, update [`src/playground/model-loader.ts`](./src/playground/model-loader.ts) to:
+If needed, update [`src/playground/model-loader.ts`](./src/playground/model-loader.ts) to change:
 
-- change position
-- change scale
-- start or stop animations
-- choose a different root mesh
+- position
+- scale
+- animation behavior
+- root mesh handling
 
-For GLB models, prefer `rotationQuaternion` over plain `rotation` when changing orientation. Imported glTF/GLB nodes commonly use quaternions, so quaternion-based rotation is the safer default.
+For imported GLB models, prefer `rotationQuaternion` over plain `rotation` when adjusting initial orientation.
 
-A practical trick used in this template:
+## 6. Add more scene content
 
-- set `rootMesh.rotationQuaternion` first for imported GLB orientation
-- then, if you want, set it to `null` and continue with plain `rotation`
+A simple growth pattern for the root template is:
 
-This is useful when you want the initial imported orientation to be correct, but still want simple Euler rotation editing afterward.
+- add another helper file in `src/playground/`
+- import and call it from [`src/playground/main-scene.ts`](./src/playground/main-scene.ts)
+- keep reusable asset paths in [`src/playground/assets.ts`](./src/playground/assets.ts)
 
-## 5. Add more scene content
+This keeps scene code easier to maintain as it grows.
 
-There are a few easy patterns you can follow:
+## 7. Debugging tips
 
-- Add another helper file in `src/playground/` for a new system, such as `lights.ts`, `character.ts`, or `environment.ts`.
-- Import and call it from [`src/playground/main-scene.ts`](./src/playground/main-scene.ts).
-- Keep reusable file paths in [`src/playground/assets.ts`](./src/playground/assets.ts).
+- Press `Ctrl+Alt+Shift+I` in development to open the Babylon inspector
+- Watch the FPS counter while testing changes
+- If WebGPU is unavailable, the root template falls back to WebGL2
+- If a model does not appear, check the path in [`src/playground/assets.ts`](./src/playground/assets.ts)
 
-This keeps the scene easier to read as it grows.
+## 8. When to use each template
 
-## 6. Use the template as a learning project
+Use the root `src/` template when you want:
 
-This template already demonstrates:
+- the richest starter
+- feature flags
+- physics
+- GUI and demo content included
 
-- engine creation
-- scene creation
-- WebGPU/WebGL fallback
-- physics setup
-- model loading
-- GUI setup
-- render loop
+Use `templates/vanilla` when you want:
 
-If you are learning Babylon.js, a good progression is:
+- the smallest baseline
+- plain TypeScript with no framework
 
-1. Change the camera settings.
-2. Change the light intensity and direction.
-3. Replace the demo model.
-4. Add your own mesh or imported asset.
-5. Add your own GUI controls.
-6. Add your own gameplay logic or interactions.
+Use `templates/react`, `templates/vue`, or `templates/svelte` when you want:
 
-## 7. Use the template as a real project base
+- framework-based app structure from the start
+- local Babylon scene code inside the framework template
 
-For a larger project, a good next step is to split code by responsibility:
+## 9. Creating another template folder
 
-- engine/bootstrap
-- scene systems
-- assets
-- gameplay/app state
-- UI
+If you add another template under `templates/`, keep the same pattern:
 
-This template already gives you the beginning of that structure.
+- one folder per template
+- its own `index.html`
+- its own `src/`
+- its own `vite.config.ts`
+- no shared engine or scene code unless you intentionally want coupling
 
-## 8. Debugging tips
-
-- Press `Ctrl+Alt+Shift+I` in development to open the Babylon inspector.
-- Use the FPS counter to watch performance changes.
-- If WebGPU is unavailable, the template will fall back to WebGL2.
-- If a model does not appear, first check the path in [`src/playground/assets.ts`](./src/playground/assets.ts).
-
-## 9. When to disable features
-
-Disable `physics` when:
-
-- you do not need Havok
-- you want faster scene setup
-
-Disable `demoModel` when:
-
-- you want a minimal primitive-only starter
-- you are replacing Xbot with your own asset flow
-
-Disable `gui` when:
-
-- you do not need Babylon GUI
-- you want a cleaner visual baseline
-
-## 10. Suggested next improvements
-
-- add shadows
-- frame the camera around the loaded model automatically
-- add an environment texture
-- add a reusable asset loader service
-- add gameplay or interaction logic
-
-## 11. Separate template folders
-
-If you want another isolated template, follow the same pattern as the folders in [`templates/`](./templates):
-
-- add a folder under `templates/`
-- give it its own `index.html`
-- give it its own `src/` entry and assets
-- give it its own `vite.config.ts` when it needs different build behavior
-
-This keeps each template independent instead of sharing scene or engine code.
+That keeps each starter independent and easy to extract into its own project later.

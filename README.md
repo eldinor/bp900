@@ -1,122 +1,101 @@
-# Babylon.js 9 + Vite 8 TypeScript Template
+# BP900 Babylon.js Templates
 
-A compact Babylon.js starter with WebGPU-first rendering, automatic WebGL2 fallback, and a simple demo scene with Havok physics.
+`bp900` is a Babylon.js starter collection built on Vite 8 and TypeScript 6.
 
-## Commands
+It includes:
+
+- the main `bp900` Babylon template in `src/`
+- a minimal `vanilla` Babylon template
+- a `react` Babylon template
+- a `vue` Babylon template
+- a `svelte` Babylon template
+
+Each template is self-contained. They do not share engine, scene, or config code.
+
+## Install
 
 `npm install`
 
-`npm run dev`
+## Commands
 
-`npm run dev:react`
+Root template:
 
-`npm run dev:svelte`
+- `npm run dev`
+- `npm run build`
+- `npm run preview`
 
-`npm run dev:vanilla`
+Other templates:
 
-`npm run dev:vue`
+- `npm run dev:vanilla`
+- `npm run build:vanilla`
+- `npm run preview:vanilla`
+- `npm run dev:react`
+- `npm run build:react`
+- `npm run preview:react`
+- `npm run dev:vue`
+- `npm run build:vue`
+- `npm run preview:vue`
+- `npm run dev:svelte`
+- `npm run build:svelte`
+- `npm run preview:svelte`
 
-`npm run typecheck`
+Checks:
 
-`npm run build`
+- `npm run typecheck`
 
-`npm run build:react`
+## Template folders
 
-`npm run build:svelte`
+- [`src/app.ts`](./src/app.ts): main `bp900` application entry
+- [`templates/vanilla`](./templates/vanilla): plain TypeScript Babylon starter
+- [`templates/react`](./templates/react): React + Babylon starter
+- [`templates/vue`](./templates/vue): Vue + Babylon starter
+- [`templates/svelte`](./templates/svelte): Svelte + Babylon starter
 
-`npm run build:vanilla`
+## How to use a template as your app base
 
-`npm run build:vue`
+There are two simple ways to work with this repo:
 
-`npm run preview`
+1. Work inside this repo and choose one template folder as your app.
+2. Copy the template folder you want into a new project and continue there.
 
-`npm run preview:react`
+Examples:
 
-`npm run preview:svelte`
+- use `templates/react` as your app and run `npm run dev:react`
+- use `templates/vue` as your app and run `npm run dev:vue`
+- use `templates/svelte` as your app and run `npm run dev:svelte`
+- use `templates/vanilla` as your app and run `npm run dev:vanilla`
 
-`npm run preview:vanilla`
+## Main template features
 
-`npm run preview:vue`
+The root `bp900` template includes:
+
+- WebGPU-first startup with WebGL2 fallback
+- Havok physics setup
+- Babylon GUI example
+- GLB model loading example
+- FPS counter
+- dev-only inspector toggle with `Ctrl+Alt+Shift+I`
+- rendering pipeline defaults
+
+## Main project shape
+
+- [`src/app.ts`](./src/app.ts): application bootstrap and engine lifecycle
+- [`src/config/template-config.ts`](./src/config/template-config.ts): main template feature flags
+- [`src/playground/main-scene.ts`](./src/playground/main-scene.ts): scene setup
+- [`src/playground/assets.ts`](./src/playground/assets.ts): asset URLs
+- [`src/playground/model-loader.ts`](./src/playground/model-loader.ts): GLB loading example
+- [`src/playground/gui.ts`](./src/playground/gui.ts): Babylon GUI example
 
 ## Documentation
 
-- [`README.md`](./README.md): project overview
 - [`HOWTO.md`](./HOWTO.md): practical usage guide
 - [`whatsnew.md`](./whatsnew.md): beginner-friendly summary of recent improvements
 - [`changelog.md`](./changelog.md): technical change log
 
-## What is included
+## Repository
 
-- Babylon.js 9, Vite 8, and TypeScript 6
-- WebGPU-first engine boot with WebGL2 fallback
-- Havok physics enabled in the starter scene
-- GLB model loading example using the bundled `public/model/Xbot.glb`
-- Babylon GUI overlay
-- GUI demo buttons for disposing axes, xBot, and the GUI itself
-- FPS counter
-- Dev-only inspector toggle with `Ctrl+Alt+Shift+I`
-- Axes viewer in development
-- Default rendering pipeline with FXAA and 4x MSAA
-- Lazy-loaded scene helpers to keep the entry bundle smaller
+- Homepage: https://babylonpress.org/
+- Repository: https://github.com/eldinor/bp900
+- Issues: https://github.com/eldinor/bp900/issues
 
-## Project shape
-
-- [`src/app.ts`](./src/app.ts): application bootstrap, engine creation, physics setup, lifecycle hooks
-- [`src/config/template-config.ts`](./src/config/template-config.ts): feature flags and rendering defaults
-- [`src/playground/main-scene.ts`](./src/playground/main-scene.ts): camera, light, environment, and scene component loading
-- [`src/playground/assets.ts`](./src/playground/assets.ts): central asset manifest for public models and textures
-- [`src/playground/ground.ts`](./src/playground/ground.ts): simple physics demo content
-- [`src/playground/model-loader.ts`](./src/playground/model-loader.ts): GLB loading example for `Xbot.glb`
-- [`src/playground/gui.ts`](./src/playground/gui.ts): fullscreen Babylon GUI demo
-- [`templates/vanilla/src/main.ts`](./templates/vanilla/src/main.ts): self-contained minimal Babylon template
-
-## Multiple templates
-
-The repo now contains fully separate templates:
-
-- root app: the existing `bp800` template
-- [`templates/vanilla`](./templates/vanilla): a self-contained minimal Babylon template copied in as its own folder
-- [`templates/react`](./templates/react): a self-contained React + Babylon template with the same demo scene recreated locally
-- [`templates/svelte`](./templates/svelte): a self-contained Svelte + Babylon template with the same demo scene recreated locally
-- [`templates/vue`](./templates/vue): a self-contained Vue + Babylon template with the same demo scene recreated locally
-
-None of these templates share engine, scene, or config code with the root template. Each one owns its own entry files and Babylon setup.
-
-## Feature switches
-
-The easiest way to customize the template is through [`src/config/template-config.ts`](./src/config/template-config.ts).
-
-You can turn these on or off there:
-
-- physics
-- demo model loading
-- GUI
-- rendering pipeline
-- axes viewer
-- FPS overlay
-- WebGPU-first startup
-
-## Asset workflow
-
-Static files live in `public/`.
-
-Use [`src/playground/assets.ts`](./src/playground/assets.ts) as the single place to reference them from code. That keeps URLs centralized and makes it easier to swap demo assets later.
-
-Current manifest entries:
-
-- `sceneAssets.texture.amiga`
-- `sceneAssets.model.xbot`
-
-The demo scene shows how to load a GLB with Babylon's loader plugin in [`src/playground/model-loader.ts`](./src/playground/model-loader.ts).
-
-For imported GLB models, rotation is typically handled with `rotationQuaternion`, not plain Euler `rotation`. In this template, the scene sets the GLB orientation using that quaternion approach before switching back to plain rotation when desired.
-
-## Notes
-
-- Havok is part of the default demo behavior so users immediately see physics working.
-- The project still has a fairly large bundle because Babylon engine features and Havok are substantial dependencies.
-- If you want a smaller production baseline, the next step is making physics optional at load time instead of bundling it into the default path.
-
-Based on https://github.com/minibao/babylon-vite
-
-Made by https://babylonpress.org/
+Based on https://github.com/eldinor/bp800/ which was based on https://github.com/minibao/babylon-vite
