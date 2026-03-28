@@ -12,9 +12,25 @@ Run the dev server:
 
 `npm run dev`
 
+Run the vanilla template:
+
+`npm run dev:vanilla`
+
+Run the React template:
+
+`npm run dev:react`
+
 Create a production build:
 
 `npm run build`
+
+Create the vanilla production build:
+
+`npm run build:vanilla`
+
+Create the React production build:
+
+`npm run build:react`
 
 Check TypeScript only:
 
@@ -23,6 +39,14 @@ Check TypeScript only:
 Preview the production build:
 
 `npm run preview`
+
+Preview the vanilla production build:
+
+`npm run preview:vanilla`
+
+Preview the React production build:
+
+`npm run preview:react`
 
 ## 2. Understand the main files
 
@@ -164,3 +188,14 @@ Disable `gui` when:
 - add an environment texture
 - add a reusable asset loader service
 - add gameplay or interaction logic
+
+## 11. Separate template folders
+
+If you want another isolated template, follow the same pattern as [`templates/vanilla`](./templates/vanilla):
+
+- add a folder under `templates/`
+- give it its own `index.html`
+- give it its own `src/` entry and assets
+- give it its own `vite.config.ts` when it needs different build behavior
+
+This keeps each template independent instead of sharing scene or engine code.

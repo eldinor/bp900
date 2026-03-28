@@ -9,6 +9,7 @@
         "noEmit": true,
         "useDefineForClassFields": true, // enable latest ECMA runtime behavior with older ECMA/JavaScript versions (delete this line if target: "ESNext" or "ES2022"+)
         "module": "ESNext", // use the latest ECMA/JavaScript syntax for our import statements and such
+        "jsx": "react-jsx",
         "moduleResolution": "bundler", // Vite-friendly module resolution for modern ESM projects
         "noResolve": false, // disable TypeScript from automatically detecting/adding files based on import statements and etc (it's less helpful than you think)
         "isolatedModules": true, // allows our code to be processed by other transpilers, such as preventing non-module TS files (you could delete this since we're only using base TypeScript)
@@ -24,6 +25,6 @@
             "@/*": ["./src/*"]
         }
     },
-    "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "tests/**/*.ts", "tests/**/*.tsx", "src/**/*.d.ts", "**/*.ts", "**/*.glsl", "**/*.vue"],
+    "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "templates/**/*.ts", "templates/**/*.tsx", "templates/**/*.d.ts", "tests/**/*.ts", "tests/**/*.tsx", "src/**/*.d.ts", "**/*.ts", "**/*.glsl", "**/*.vue"],
     "exclude": ["node_modules", "tests/server/**/*.ts", "dist", "**/*.js"]
 }

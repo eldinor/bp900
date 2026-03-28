@@ -8,11 +8,23 @@ A compact Babylon.js starter with WebGPU-first rendering, automatic WebGL2 fallb
 
 `npm run dev`
 
+`npm run dev:react`
+
+`npm run dev:vanilla`
+
 `npm run typecheck`
 
 `npm run build`
 
+`npm run build:react`
+
+`npm run build:vanilla`
+
 `npm run preview`
+
+`npm run preview:react`
+
+`npm run preview:vanilla`
 
 ## Documentation
 
@@ -44,6 +56,17 @@ A compact Babylon.js starter with WebGPU-first rendering, automatic WebGL2 fallb
 - [`src/playground/ground.ts`](./src/playground/ground.ts): simple physics demo content
 - [`src/playground/model-loader.ts`](./src/playground/model-loader.ts): GLB loading example for `Xbot.glb`
 - [`src/playground/gui.ts`](./src/playground/gui.ts): fullscreen Babylon GUI demo
+- [`templates/vanilla/src/main.ts`](./templates/vanilla/src/main.ts): self-contained minimal Babylon template
+
+## Multiple templates
+
+The repo now contains two fully separate templates:
+
+- root app: the existing `bp800` template
+- [`templates/vanilla`](./templates/vanilla): a self-contained minimal Babylon template copied in as its own folder
+- [`templates/react`](./templates/react): a self-contained React + Babylon template with the same demo scene recreated locally
+
+The `vanilla` and `react` templates do not share engine, scene, or config code with the root template. Each one has its own `index.html`, `vite.config.ts`, and `src/` files.
 
 ## Feature switches
 
