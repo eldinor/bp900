@@ -1,6 +1,6 @@
-# BP900 Babylon.js Templates
+# BabylonPress Babylon.js 9 Templates
 
-`bp900` is a Babylon.js starter collection built on Vite 8 and TypeScript 6.
+This is a Babylon.js 9 starter templates collection built on Vite 8 and TypeScript 6, created by [BabylonPress](https://babylonpress.org/).
 
 It delivers a strong foundation for modern 3D web experiences: fast to start, pleasant to work with, and flexible enough to grow from a simple prototype into a polished product. The template combines a clean developer setup with powerful rendering, making it easy to build interactive scenes without fighting the tooling.
 
