@@ -30,6 +30,8 @@ export const setUI = async (scene: Scene): Promise<void> => {
   }
 
   const advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI("myUI");
+  advancedTexture.rootContainer.scaleX = window.devicePixelRatio;
+  advancedTexture.rootContainer.scaleY = window.devicePixelRatio;
 
   const panel = new StackPanel();
   panel.width = uiConfig.panel.width;

@@ -1,7 +1,9 @@
-import { StrictMode } from "react";
+import { StrictMode, version as reactVersion } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./style.css";
+
+console.info(`React version ${reactVersion}`);
 
 const rootElement = document.getElementById("root");
 

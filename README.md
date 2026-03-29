@@ -2,13 +2,17 @@
 
 `bp900` is a Babylon.js starter collection built on Vite 8 and TypeScript 6.
 
+It delivers a strong foundation for modern 3D web experiences: fast to start, pleasant to work with, and flexible enough to grow from a simple prototype into a polished product. The template combines a clean developer setup with powerful rendering, making it easy to build interactive scenes without fighting the tooling.
+
+What makes it especially good is the balance between usability and capability. It supports multiple frontend styles (Vanilla, React, Vue, Svelte), keeps the project structure approachable, and gives the room to add richer visuals, UI, and gameplay or product features over time. In short, it is not just functional, but a reliable, scalable, and developer-friendly template with real creative potential.
+
 It includes:
 
-- the main `bp900` Babylon template in `src/`
+- the main `bp900` Babylon template in `src/` - Havok physics, GLB loading, Babylon GUI, and a lot of sugar to make development sweeter
 - a minimal `vanilla` Babylon template
-- a `react` Babylon template
-- a `vue` Babylon template
-- a `svelte` Babylon template
+- a minimal `react` Babylon template
+- a minimal `vue` Babylon template
+- a minimal `svelte` Babylon template
 
 Each template is self-contained. They do not share engine, scene, or config code.
 

@@ -11,6 +11,10 @@ import "@babylonjs/core/Meshes/Builders/boxBuilder";
 import "@babylonjs/core/Meshes/Builders/groundBuilder";
 import { Scene } from "@babylonjs/core/scene";
 
+declare const __VANILLA_VERSION__: string;
+
+console.info(`Vanilla version ${__VANILLA_VERSION__}`);
+
 const canvas = document.querySelector<HTMLCanvasElement>("#renderCanvas");
 
 if (!canvas) {
