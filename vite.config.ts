@@ -10,6 +10,7 @@ function pathResolve(dir: string) {
 export default ({ mode }: any) => {
   const root = process.cwd();
   const env = loadEnv(mode, root);
+
   return defineConfig({
     base: env.VITE_PUBLIC_PATH,
     root,
@@ -22,12 +23,6 @@ export default ({ mode }: any) => {
       },
       // https://github.com/vitejs/vite/issues/178#issuecomment-630138450
       extensions: [".js", ".ts", ".json"],
-    },
-    // https://vitejs.cn/config/#esbuild
-    esbuild: {
-      // pure: env.VITE_DROP_CONSOLE ? ["console.log", "debugger"] : [],
-      pure: mode === "production" ? ["console.log"] : [],
-      //  drop: ["console", "debugger"],
     },
     // server config
     server: {
@@ -49,7 +44,7 @@ export default ({ mode }: any) => {
 
     // build: https://vitejs.cn/config/#build-target
     build: {
-      target: "modules",
+      target: "esnext",
       outDir: "dist",
       chunkSizeWarningLimit: 550,
       assetsInlineLimit: 4096,

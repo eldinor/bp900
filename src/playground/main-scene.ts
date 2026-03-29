@@ -1,24 +1,29 @@
 import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
 import { DefaultRenderingPipeline } from "@babylonjs/core/PostProcesses/RenderPipeline/Pipelines/defaultRenderingPipeline";
-import { Engine } from "@babylonjs/core/Engines/engine";
 import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight";
+import type { AbstractMesh } from "@babylonjs/core/Meshes/abstractMesh";
 import { Scene } from "@babylonjs/core/scene";
 import { Tools } from "@babylonjs/core/Misc/tools";
-import { Vector3 } from "@babylonjs/core/Maths/math.vector";
-import { WebGPUEngine } from "@babylonjs/core/Engines/webgpuEngine";
+import { Quaternion, Vector3 } from "@babylonjs/core/Maths/math.vector";
 import "@babylonjs/core/Helpers/sceneHelpers";
-// import { LoadAssetContainerAsync } from "@babylonjs/core/Loading/sceneLoader";
-import { Ground } from "./ground";
-import { setUI } from "./gui";
+import { templateConfig } from "../config/template-config";
+import { sceneAssets } from "./assets";
+import { getSceneRuntimeState } from "./scene-runtime";
 
 export default class MainScene {
   private camera: ArcRotateCamera;
 
-  constructor(private scene: Scene, private canvas: HTMLCanvasElement, private engine: Engine | WebGPUEngine) {
+  constructor(
+    private scene: Scene,
+    private canvas: HTMLCanvasElement,
+  ) {
     this._setCamera(scene);
     this._setLight(scene);
     this._setEnvironment(scene);
-    this.loadComponents();
+    if (templateConfig.features.pipeline) {
+      this._setPipeLine();
+    }
+    void this.loadComponents();
   }
 
   _setCamera(scene: Scene): void {
@@ -38,15 +43,36 @@ export default class MainScene {
 
   _setPipeLine(): void {
     const pipeline = new DefaultRenderingPipeline("default-pipeline", false, this.scene, [this.scene.activeCamera!]);
-    pipeline.fxaaEnabled = true;
-    pipeline.samples = 4;
+    pipeline.fxaaEnabled = templateConfig.rendering.pipeline.fxaaEnabled;
+    pipeline.samples = templateConfig.rendering.pipeline.samples;
   }
 
   async loadComponents(): Promise<void> {
-    // Load your files in order
+    const [{ Ground }, guiModule, modelModule] = await Promise.all([
+      import("./ground"),
+      templateConfig.features.gui ? import("./gui") : Promise.resolve(null),
+      templateConfig.features.demoModel ? import("./model-loader") : Promise.resolve(null),
+    ]);
+
+    this.scene.metadata = {
+      ...(this.scene.metadata ?? {}),
+      assets: sceneAssets,
+    };
+
     new Ground(this.scene);
-    // Load Babylon GUI
-    await setUI(this.scene);
-    //
+
+    if (guiModule) {
+      await guiModule.setUI(this.scene);
+    }
+
+    if (modelModule) {
+      const rootMesh = await modelModule.loadDemoModel(this.scene, sceneAssets.model.xbot);
+      if (rootMesh) {
+        rootMesh.position = new Vector3(0, 0, 4);
+        rootMesh.rotationQuaternion = null; // then you may use usual rotation
+        rootMesh.scaling = new Vector3(1.25, 1.25, 1.25);
+        getSceneRuntimeState(this.scene).demoModelRootMesh = rootMesh;
+      }
+    }
   }
 }
