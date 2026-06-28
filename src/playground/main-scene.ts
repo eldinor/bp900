@@ -5,6 +5,7 @@ import type { AbstractMesh } from "@babylonjs/core/Meshes/abstractMesh";
 import { Scene } from "@babylonjs/core/scene";
 import { Tools } from "@babylonjs/core/Misc/tools";
 import { Quaternion, Vector3 } from "@babylonjs/core/Maths/math.vector";
+import "@babylonjs/core/Materials/Textures/cubeTexture";
 import "@babylonjs/core/Helpers/sceneHelpers";
 import { templateConfig } from "../config/template-config";
 import { sceneAssets } from "./assets";

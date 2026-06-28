@@ -16,6 +16,7 @@ Run the main template:
 
 Run the other templates:
 
+- `npm run dev:lite-compat`
 - `npm run dev:vanilla`
 - `npm run dev:react`
 - `npm run dev:vue`
@@ -23,6 +24,7 @@ Run the other templates:
 
 Build the other templates:
 
+- `npm run build:lite-compat`
 - `npm run build:vanilla`
 - `npm run build:react`
 - `npm run build:vue`
@@ -30,6 +32,7 @@ Build the other templates:
 
 Preview the other templates:
 
+- `npm run preview:lite-compat`
 - `npm run preview:vanilla`
 - `npm run preview:react`
 - `npm run preview:vue`
@@ -43,6 +46,7 @@ Type-check the repo:
 
 If you want to start a project from one of the framework templates, pick one folder and treat it as your app base:
 
+- [`templates/lite-compat`](./templates/lite-compat)
 - [`templates/vanilla`](./templates/vanilla)
 - [`templates/react`](./templates/react)
 - [`templates/vue`](./templates/vue)
@@ -54,7 +58,7 @@ Example workflow for React:
 2. Edit files in [`templates/react`](./templates/react)
 3. Build with `npm run build:react`
 
-The same pattern applies to `vue`, `svelte`, and `vanilla`.
+The same pattern applies to `lite-compat`, `vue`, `svelte`, and `vanilla`.
 
 ## 3. Understand the main template
 
@@ -136,6 +140,12 @@ Use `templates/vanilla` when you want:
 
 - the smallest baseline
 - plain TypeScript with no framework
+
+Use `templates/lite-compat` when you want:
+
+- Babylon.js-shaped classes backed by Babylon Lite
+- a WebGPU-only, migration-friendly starter
+- GLB loading, environment lighting, orbit controls, and animation without unsupported GUI, Inspector, post-process, or Babylon-style physics APIs
 
 Use `templates/react`, `templates/vue`, or `templates/svelte` when you want:
 

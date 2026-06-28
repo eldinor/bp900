@@ -3,6 +3,7 @@ import { Scene } from "@babylonjs/core/scene";
 import { AxesViewer } from "@babylonjs/core/Debug/axesViewer";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { WebGPUEngine } from "@babylonjs/core/Engines/webgpuEngine";
+import "@babylonjs/core/Physics/physicsEngineComponent";
 import { HavokPlugin } from "@babylonjs/core/Physics/v2/Plugins/havokPlugin";
 
 import { templateConfig } from "./config/template-config";
@@ -68,7 +69,9 @@ class App {
     const { default: HavokPhysics } = await import("@babylonjs/havok");
     const hk = await HavokPhysics();
     const plugin = new HavokPlugin(true, hk);
-    this.scene.enablePhysics(gravity, plugin);
+    if (!this.scene.enablePhysics(gravity, plugin)) {
+      throw new Error("Failed to initialize the Havok physics engine.");
+    }
   }
 
   _fps(): void {

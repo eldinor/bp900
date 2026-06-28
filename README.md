@@ -9,6 +9,7 @@ What makes it especially good is the balance between usability and capability. I
 It includes:
 
 - the main `bp900` Babylon template in `src/` - Havok physics, GLB loading, Babylon GUI, and a lot of sugar to make development sweeter
+- a WebGPU-first Babylon Lite compatibility template
 - a minimal `vanilla` Babylon template
 - a minimal `react` Babylon template
 - a minimal `vue` Babylon template
@@ -30,6 +31,9 @@ Root template:
 
 Other templates:
 
+- `npm run dev:lite-compat`
+- `npm run build:lite-compat`
+- `npm run preview:lite-compat`
 - `npm run dev:vanilla`
 - `npm run build:vanilla`
 - `npm run preview:vanilla`
@@ -50,6 +54,7 @@ Checks:
 ## Template folders
 
 - [`src/app.ts`](./src/app.ts): main `bp900` application entry
+- [`templates/lite-compat`](./templates/lite-compat): Babylon.js-shaped APIs running on Babylon Lite's WebGPU renderer
 - [`templates/vanilla`](./templates/vanilla): plain TypeScript Babylon starter
 - [`templates/react`](./templates/react): React + Babylon starter
 - [`templates/vue`](./templates/vue): Vue + Babylon starter
@@ -64,6 +69,7 @@ There are two simple ways to work with this repo:
 
 Examples:
 
+- use `templates/lite-compat` for a WebGPU-first migration path and run `npm run dev:lite-compat`
 - use `templates/react` as your app and run `npm run dev:react`
 - use `templates/vue` as your app and run `npm run dev:vue`
 - use `templates/svelte` as your app and run `npm run dev:svelte`

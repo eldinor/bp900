@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.2.0 - 2026-06-28
+
+### Added
+
+- Added a WebGPU-first [`templates/lite-compat`](./templates/lite-compat) starter using `@babylonjs/lite` 1.6 and `@babylonjs/lite-compat` 1.6 preview.
+- Added `dev:lite-compat`, `build:lite-compat`, and `preview:lite-compat` scripts.
+- Added the Babylon Lite BRDF LUT at [`public/brdf-lut.png`](./public/brdf-lut.png) for environment lighting.
+
+### Changed
+
+- Updated direct npm dependencies to their latest releases, including Babylon.js 9.14, Vite 8.1, React 19.2, Vue 3.5, Svelte 5.56, and TypeScript 6.0.
+- Documented the Lite Compat template and its intentionally smaller supported feature surface.
+- Matched the Lite Compat template's canvas, camera, lighting, ground, bouncing sphere, model layout, animation, and FPS display to the root template.
+- Added a development-only Lite position gizmo with its private pointer registrations removed, making the real gizmo display-only like the root template's `AxesViewer`.
+
+### Fixed
+
+- Registered Babylon.js CubeTexture runtime side effects before creating the default environment, fixing `CubeTexture.CreateFromPrefilteredData is not a function` after the Babylon.js 9.14 upgrade.
+- Registered the Babylon.js physics scene component before initializing Havok, fixing `No Physics Engine available` when creating physics aggregates.
+- Added an explicit startup error when Havok cannot be attached to the scene.
+- Avoided Lite's overlapping gizmo hover-pick readbacks, which caused `pick-color-staging` buffer mapping errors, by unregistering the display-only gizmo axes from the private pointer dispatcher.
+
 ## 0.1.0
 
 This release turns the project into a small Babylon.js starter collection instead of a single template.
