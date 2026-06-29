@@ -12,11 +12,14 @@
 
 - Updated direct npm dependencies to their latest releases, including Babylon.js 9.14, Vite 8.1, React 19.2, Vue 3.5, Svelte 5.56, and TypeScript 6.0.
 - Documented the Lite Compat template and its intentionally smaller supported feature surface.
+- Linked the separately shipped [`eldinor/babylon-lite-template`](https://github.com/eldinor/babylon-lite-template) repository from the main README.
 - Matched the Lite Compat template's canvas, camera, lighting, ground, bouncing sphere, model layout, animation, and FPS display to the root template.
 - Added a development-only Lite position gizmo with its private pointer registrations removed, making the real gizmo display-only like the root template's `AxesViewer`.
+- Replaced the Lite Compat template's hand-written sphere bounce with native Lite Havok-V2 physics using `createHavokWorld()` and `createPhysicsAggregate()`.
 
 ### Fixed
 
+- Matched the Lite Havok timestep to the original delta-driven `HavokPlugin(true, hk)` behavior, preventing physics from running too quickly on high-refresh displays; documented the upstream behavior in [`docs/issues/babylon-lite-havok-timestep-is-frame-rate-dependent.md`](./docs/issues/babylon-lite-havok-timestep-is-frame-rate-dependent.md).
 - Registered Babylon.js CubeTexture runtime side effects before creating the default environment, fixing `CubeTexture.CreateFromPrefilteredData is not a function` after the Babylon.js 9.14 upgrade.
 - Registered the Babylon.js physics scene component before initializing Havok, fixing `No Physics Engine available` when creating physics aggregates.
 - Added an explicit startup error when Havok cannot be attached to the scene.

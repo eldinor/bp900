@@ -17,6 +17,8 @@ It includes:
 
 Each template is self-contained. They do not share engine, scene, or config code.
 
+The Babylon Lite template currently is shipped separately: [eldinor/babylon-lite-template](https://github.com/eldinor/babylon-lite-template).
+
 ## Install
 
 `npm install`

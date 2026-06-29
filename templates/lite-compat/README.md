@@ -18,12 +18,12 @@ The demo includes:
 - the same `ArcRotateCamera` angles, target relationship, and radius as the root template
 - a hemispheric light
 - environment lighting without a generated ground or skybox
-- the same 10×10 ground and bouncing sphere composition as the root scene
+- the same 10×10 ground and bouncing sphere composition as the root scene, simulated by native Lite Havok-V2 physics
 - the local `Xbot.glb` model and its animation
 - a development-only Lite position gizmo at the scene origin with its private pointer registrations removed, making it display-only like the root template's `AxesViewer`
 - the same top-right FPS display and full-canvas styling
 
-The template intentionally omits GUI, Inspector, post-process pipelines, WebXR, and Babylon-style physics because those APIs are not currently supported by the Lite Compat layer. The sphere uses a small local gravity/restitution simulation to preserve the root template's visible motion.
+The template intentionally omits GUI, Inspector, post-process pipelines, and WebXR because those APIs are not currently supported by the Lite Compat layer. Physics crosses into the underlying native Lite scene and meshes to use `createHavokWorld()` and `createPhysicsAggregate()` until equivalent public Compat wrappers are available.
 
 ## Direct imports and migration mode
 

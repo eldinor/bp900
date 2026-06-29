@@ -9,6 +9,19 @@ import {
   Vector3,
   WebGPUEngine,
 } from "@babylonjs/lite-compat";
+import {
+  createHavokWorld,
+  createPhysicsAggregate,
+  disposePhysics,
+  onBeforeRender,
+  releasePhysicsShape,
+  removePhysicsBody,
+  setPhysicsTimestep,
+  type Mesh as LiteMesh,
+  type PhysicsWorld,
+  type PhysicsShapeType,
+  type SceneContext,
+} from "@babylonjs/lite";
 
 const canvas = document.createElement("canvas");
 canvas.id = "renderCanvas";
@@ -37,6 +50,21 @@ type PrivateCompatPositionGizmo = {
   _lite: PrivatePositionGizmo;
 };
 
+type PrivateLiteScene = {
+  _lite: SceneContext;
+};
+
+type PrivateLiteMesh = {
+  _lite: LiteMesh;
+};
+
+// Lite publishes PhysicsShapeType as an ambient const enum, which cannot be
+// accessed as a runtime value when TypeScript isolatedModules is enabled.
+const nativeShapeType = {
+  sphere: 0 as PhysicsShapeType,
+  box: 3 as PhysicsShapeType,
+};
+
 const createDisplayOnlyGizmo = (scene: Scene) => {
   const target = MeshBuilder.CreateBox("axesTarget", { size: 0.01 }, scene);
   target.position = sceneOrigin.clone();
@@ -57,6 +85,57 @@ const createDisplayOnlyGizmo = (scene: Scene) => {
   }
 
   return { manager, target };
+};
+
+const createNativePhysics = async (
+  scene: Scene,
+  ground: PrivateLiteMesh,
+  sphere: PrivateLiteMesh,
+): Promise<() => void> => {
+  const { default: HavokPhysics } = await import("@babylonjs/havok");
+  const hknp = await HavokPhysics();
+  const nativeScene = (scene as unknown as PrivateLiteScene)._lite;
+  let world: PhysicsWorld | null = null;
+
+  // The original uses `new HavokPlugin(true, hk)`, where `true` means that
+  // Havok steps with the current frame delta. Lite defaults to one fixed 1/60
+  // step per rendered frame, which runs too quickly on high-refresh displays.
+  // Register this callback first so it updates the timestep before Lite's
+  // createHavokWorld callback performs the step.
+  onBeforeRender(nativeScene, (deltaMs) => {
+    if (!world) return;
+
+    const deltaSeconds = deltaMs / 1000;
+    setPhysicsTimestep(world, deltaSeconds > 0 ? Math.min(deltaSeconds, 0.1) : 1 / 60);
+  });
+
+  world = createHavokWorld(nativeScene, hknp, { x: 0, y: -9.81, z: 0 });
+
+  const groundAggregate = createPhysicsAggregate(world, ground._lite, nativeShapeType.box, {
+    mass: 0,
+    startAsleep: true,
+    // A rendered ground plane has zero Y thickness. Give its Havok box a thin
+    // volume directly below the visible surface while preserving the 10x10 size.
+    extents: { x: 10, y: 0.1, z: 10 },
+    center: { x: 0, y: -0.05, z: 0 },
+  });
+
+  const sphereAggregate = createPhysicsAggregate(world, sphere._lite, nativeShapeType.sphere, {
+    mass: 1,
+    radius: 1,
+    restitution: 0.75,
+  });
+
+  return () => {
+    if (!world) return;
+
+    removePhysicsBody(world, sphereAggregate.body);
+    releasePhysicsShape(world, sphereAggregate.shape);
+    removePhysicsBody(world, groundAggregate.body);
+    releasePhysicsShape(world, groundAggregate.shape);
+    disposePhysics(world);
+    world = null;
+  };
 };
 
 const bootstrap = async (): Promise<void> => {
@@ -86,24 +165,18 @@ const bootstrap = async (): Promise<void> => {
   const sphere = MeshBuilder.CreateSphere("sphere", { diameter: 2, segments: 32 }, scene);
   sphere.position = new Vector3(0, 4, sceneOrigin.z);
 
+  const disposeNativePhysics = await createNativePhysics(
+    scene,
+    ground as unknown as PrivateLiteMesh,
+    sphere as unknown as PrivateLiteMesh,
+  );
+
   const axesGizmo = import.meta.env.DEV ? createDisplayOnlyGizmo(scene) : null;
 
   await ImportMeshAsync(modelUrl, scene);
 
   const animation = scene.animationGroups[1] ?? scene.animationGroups[0];
   animation?.start(true);
-
-  let verticalVelocity = 0;
-  scene.registerBeforeRender(() => {
-    const deltaSeconds = Math.min(engine.getDeltaTime() / 1000, 0.05);
-    verticalVelocity -= 9.81 * deltaSeconds;
-    sphere.position.y += verticalVelocity * deltaSeconds;
-
-    if (sphere.position.y <= 1) {
-      sphere.position.y = 1;
-      verticalVelocity = Math.abs(verticalVelocity) * 0.75;
-    }
-  });
 
   engine.runRenderLoop(() => {
     scene.render();
@@ -114,6 +187,7 @@ const bootstrap = async (): Promise<void> => {
   window.addEventListener("beforeunload", () => {
     axesGizmo?.manager.dispose();
     axesGizmo?.target.dispose();
+    disposeNativePhysics();
     scene.dispose();
     engine.dispose();
   });
