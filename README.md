@@ -1,4 +1,4 @@
-# BabylonPress Babylon.js 9 Templates
+# BabylonPress Babylon.js 9 and Babylon Lite-Compat Templates
 
 This is a Babylon.js 9 starter templates collection built on Vite 8 and TypeScript 6, created by [BabylonPress](https://babylonpress.org/).
 
