@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.0
+
+### Changed
+
+- Updated Babylon.js packages to 9.16.1, `@babylonjs/lite` to 1.9.0, and `@babylonjs/lite-compat` to 1.9.0-preview.
+- Updated the Lite Compat template to use `HavokPlugin` with `scene.enablePhysics`, leaving refresh-rate-independent stepping to Lite Compat 1.9.
+
 ## 0.2.0 - 2026-06-28
 
 ### Added

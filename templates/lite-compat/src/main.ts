@@ -3,24 +3,20 @@ import {
   ArcRotateCamera,
   GizmoManager,
   HemisphericLight,
+  HavokPlugin,
   ImportMeshAsync,
   MeshBuilder,
+  PhysicsShapeType as CompatPhysicsShapeType,
   Scene,
   Vector3,
   WebGPUEngine,
 } from "@babylonjs/lite-compat";
 import {
-  createHavokWorld,
   createPhysicsAggregate,
-  disposePhysics,
-  onBeforeRender,
   releasePhysicsShape,
   removePhysicsBody,
-  setPhysicsTimestep,
   type Mesh as LiteMesh,
-  type PhysicsWorld,
   type PhysicsShapeType,
-  type SceneContext,
 } from "@babylonjs/lite";
 
 const canvas = document.createElement("canvas");
@@ -50,19 +46,13 @@ type PrivateCompatPositionGizmo = {
   _lite: PrivatePositionGizmo;
 };
 
-type PrivateLiteScene = {
-  _lite: SceneContext;
-};
-
 type PrivateLiteMesh = {
   _lite: LiteMesh;
 };
 
-// Lite publishes PhysicsShapeType as an ambient const enum, which cannot be
-// accessed as a runtime value when TypeScript isolatedModules is enabled.
 const nativeShapeType = {
-  sphere: 0 as PhysicsShapeType,
-  box: 3 as PhysicsShapeType,
+  sphere: CompatPhysicsShapeType.SPHERE as unknown as PhysicsShapeType,
+  box: CompatPhysicsShapeType.BOX as unknown as PhysicsShapeType,
 };
 
 const createDisplayOnlyGizmo = (scene: Scene) => {
@@ -74,8 +64,8 @@ const createDisplayOnlyGizmo = (scene: Scene) => {
   manager.positionGizmoEnabled = true;
   manager.attachToMesh(target);
 
-  // Temporary workaround for @babylonjs/lite 1.6: the public API has no
-  // display-only mode. Unregister each axis from the pointer dispatcher while
+  // Temporary workaround while Lite has no public display-only gizmo mode.
+  // Unregister each axis from the pointer dispatcher while
   // leaving its utility-layer meshes and follow-target callback intact.
   const compatGizmo = manager.gizmos.positionGizmo as unknown as PrivateCompatPositionGizmo;
   for (const axis of [compatGizmo._lite.xGizmo, compatGizmo._lite.yGizmo, compatGizmo._lite.zGizmo]) {
@@ -94,22 +84,13 @@ const createNativePhysics = async (
 ): Promise<() => void> => {
   const { default: HavokPhysics } = await import("@babylonjs/havok");
   const hknp = await HavokPhysics();
-  const nativeScene = (scene as unknown as PrivateLiteScene)._lite;
-  let world: PhysicsWorld | null = null;
+  const plugin = new HavokPlugin(true, hknp);
 
-  // The original uses `new HavokPlugin(true, hk)`, where `true` means that
-  // Havok steps with the current frame delta. Lite defaults to one fixed 1/60
-  // step per rendered frame, which runs too quickly on high-refresh displays.
-  // Register this callback first so it updates the timestep before Lite's
-  // createHavokWorld callback performs the step.
-  onBeforeRender(nativeScene, (deltaMs) => {
-    if (!world) return;
+  if (!scene.enablePhysics(new Vector3(0, -9.81, 0), plugin) || !plugin.world) {
+    throw new Error("Lite Compat could not enable Havok physics.");
+  }
 
-    const deltaSeconds = deltaMs / 1000;
-    setPhysicsTimestep(world, deltaSeconds > 0 ? Math.min(deltaSeconds, 0.1) : 1 / 60);
-  });
-
-  world = createHavokWorld(nativeScene, hknp, { x: 0, y: -9.81, z: 0 });
+  const world = plugin.world;
 
   const groundAggregate = createPhysicsAggregate(world, ground._lite, nativeShapeType.box, {
     mass: 0,
@@ -127,14 +108,11 @@ const createNativePhysics = async (
   });
 
   return () => {
-    if (!world) return;
-
     removePhysicsBody(world, sphereAggregate.body);
     releasePhysicsShape(world, sphereAggregate.shape);
     removePhysicsBody(world, groundAggregate.body);
     releasePhysicsShape(world, groundAggregate.shape);
-    disposePhysics(world);
-    world = null;
+    scene.disablePhysicsEngine();
   };
 };
 
